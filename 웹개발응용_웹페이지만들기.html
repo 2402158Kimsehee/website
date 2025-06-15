@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>웹개발응용_기말과제</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #fff;
+    }
+
+    .navbar {
+      width: 100%;
+      background-color: black;
+      color: white;
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid white;
+    }
+
+    .navbar a {
+      margin-left: 135px;
+      padding: 10px 20px;
+      font-size: 18px;
+      color: white;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .navbar a:hover {
+      background-color: #444;
+    }
+
+    .content {
+      display: none;
+      padding: 30px;
+    }
+
+    .active {
+      display: block;
+    }
+
+    .footer {
+      width: 100%;
+      height: 60px;
+      background-color: #222;
+      color: white;
+      text-align: center;
+      font-size: 16px;
+      line-height: 60px;
+      position: fixed;
+      bottom: 0;
+    }
+
+    .typing-box {
+      border: 1px solid #ccc;
+      padding: 10px;
+      font-size: 20px;
+      width: 500px;
+      height: 150px;
+    }
+    
+    /* 한글타자기 스타일 */
+    .paper { 
+    	display: block;
+        width: 435px;
+		height: 100px;
+		border: 1px solid #333;
+		overflow: auto;
+	}
+    label {
+		display: inline-block;
+		width: 40px;
+		height: 40px;
+		text-align: center;
+		line-height: 35px;
+	}
+	#keyboard_en, #keyboard_ko {
+		position: absolute;  
+		top: 330px;   
+	}
+    .show {
+		opacity: 1;
+		visibility: visible;
+	}
+	.hide {
+		opacity: 0;
+		visibility: hidden;
+    }
+    
+    /* 영문타자기 스타일*/
+    .E_paper {
+        display: block;
+		width: 435px;
+		height: 100px;
+		border: 1px solid black;
+		overflow: auto;}
+	.key {
+		display: inline-block;
+		width: 40px;
+		height: 40px;
+		text-align: center;
+		line-height: 35px;}
+    .g1 {background-color: rgb(228, 82, 162);}
+    .g2 {background-color: orange;}
+    .g3 {background-color: rgb(38, 176, 111);}
+	.g4 {background-color: rgb(58, 207, 209);}
+	.g5 {background-color: rgb(255, 0, 0);}
+	.g6 {background-color: rgb(0, 76, 255);}
+    
+    /* 계산기 스타일 */
+    #calculator-display {
+      width: 225px;
+      height: 50px;
+      font-size: 24px;
+      text-align: right;
+      border: 2px solid black;
+      background-color: #ffffff;
+      color: rgb(0, 0, 0);
+    }
+    #calculator button {
+      width: 50px;
+      height: 50px;
+      font-size: 18px;
+      margin: 3px;
+      border: none;
+      color: white;
+    }
+    #calculator .number {
+      background-color: #444;
+      border-radius: 50%;
+    }
+    #calculator .operator {
+      background-color: orange;
+      border-radius: 10%;
+    }
+    #calculator .special_operator {
+      background-color: gray;
+      border-radius: 50% / 40%;
+    }
+    #calculator .equal {
+      background-color: orange;
+      border-radius: 50% / 40%;
+    }
+
+    /* 전화기 스타일 */
+    #phone-display {
+      width: 165px;
+      height: 50px;
+      background-color: white;
+      color: black;
+    }
+    #phone button {
+      width: 50px;
+      height: 50px;
+      font-size: 20px;
+      border-radius: 10%;
+      margin: 3px;
+    }
+  </style>
+</head>
+<body>
+  <!-- 네비게이션 -->
+  <div class="navbar">
+    <a onclick="showTab('intro')">소개</a>
+    <a onclick="showTab('english')">영문 타자기</a>
+    <a onclick="showTab('korean')">한글 타자기</a>
+    <a onclick="showTab('calculator')">계산기</a>
+    <a onclick="showTab('phone')">전화기</a>
+  </div>
+
+  <!-- 소개 -->
+  <div id="intro" class="content active">
+    <br><br>
+    <h2>[웹개발응용] 웹페이지 만들기</h2>
+    <p><strong>소속:</strong> 한양여자대학교 빅데이터과 B반</p>
+    <p><strong>학번:</strong> 2402158</p>
+    <p><strong>이름:</strong> 김세희</p>
+    <p><strong>기능 (클릭 시 이동합니다.)</strong><p>
+    <ul>
+      <li><a onclick="showTab('english')">영문 타자기</a></li>
+      <li><a onclick="showTab('korean')">한글 타자기</a></li>
+      <li><a onclick="showTab('calculator')">계산기</a></li>
+      <li><a onclick="showTab('phone')">전화기</a></li>
+    </ul>
+  </div>
+
+  <!-- 영문 타자기 -->
+  <div id="english" class="content">
+    <h2>영문 타자기</h2>
+	<label class="E_paper"></label>
+	<p></p>
+	<div>
+	<span class="key g1">1</span>
+	<span class="key g1">2</span>
+	<span class="key g1">3</span>
+	<span class="key g1">4</span>
+	<span class="key g1">5</span>
+	<span class="key g1">6</span>
+	<span class="key g1">7</span>
+	<span class="key g1">8</span>
+	<span class="key g1">9</span>
+	<span class="key g1">0</span>
+	</div>
+	<div>
+	<span class="key g2">q</span>
+	<span class="key g2">e</span>
+	<span class="key g2">w</span>
+	<span class="key g2">r</span>
+	<span class="key g2">t</span>
+	<span class="key g2">y</span>
+	<span class="key g2">u</span>
+	<span class="key g2">i</span>
+	<span class="key g2">o</span>
+	<span class="key g2">p</span>
+	</div>
+	<div>
+	<span class="key g3">a</span>
+	<span class="key g3">s</span>
+	<span class="key g3">d</span>
+	<span class="key g3">f</span>
+	<span class="key g3">g</span>
+	<span class="key g3">h</span>
+	<span class="key g3">j</span>
+	<span class="key g3">k</span>
+	<span class="key g3">1</span>
+	<span class="key g3"> ;</span>
+	</div>
+    <div>
+	<span class="key g4">z</span>
+	<span class="key g4">x</span>
+	<span class="key g4">c</span>
+	<span class="key g4">v</span>
+	<span class="key g4">b</span>
+	<span class="key g4">n</span>
+	<span class="key g4">m</span>
+	<span class="key g4">,</span>
+	<span class="key g4">.</span>
+	<span class="key g4">/</span>
+	</div>
+  </div>
+
+  <!-- 한글 타자기 -->
+  <div id="korean" class="content">
+    <h2>한글 타자기</h2>
+    <p>( . 을 누르면 키보드가 나타납니다. )</p>
+    <label class="paper"></label>
+	<p></p>
+    <div id="keyboard_en" class="hide">
+		<div>
+			<label class="g1">1</label>
+            <label class="g1">2</label>
+            <label class="g1">3</label>
+            <label class="g1">4</label>
+            <label class="g1">5</label>
+            <label class="g1">6</label>
+            <label class="g1">7</label>
+            <label class="g1">8</label>
+            <label class="g1">9</label>
+            <label class="g1">0</label>
+        </div>
+        <div>
+            <label class="g2">q</label>
+            <label class="g2">w</label>
+            <label class="g2">e</label>
+            <label class="g2">r</label>
+            <label class="g2">t</label>
+            <label class="g2">y</label>
+            <label class="g2">u</label>
+            <label class="g2">i</label>
+            <label class="g2">o</label>
+            <label class="g2">p</label>
+		</div>
+        <div>
+			<label class="g3">a</label>
+			<label class="g3">s</label>
+			<label class="g3">d</label>
+			<label class="g3">f</label>
+			<label class="g3">g</label>
+			<label class="g3">h</label>
+			<label class="g3">j</label>
+			<label class="g3">k</label>
+			<label class="g3">l</label>
+			<label class="g3">;</label>
+		</div>
+        <div>
+			<label class="g4">z</label>
+            <label class="g4">x</label>
+            <label class="g4">c</label>
+            <label class="g4">v</label>
+            <label class="g4">b</label>
+            <label class="g4">n</label>
+            <label class="g4">m</label>
+            <label class="g4">,</label>
+            <label class="g5">한/영</label>
+            <label class="g4">/</label>
+        </div>
+    </div>
+    <p></p>
+    <div id="keyboard_ko" class="hide">
+        <div>
+            <label class="g2">ㅂ</label>
+            <label class="g2">ㅈ</label>
+            <label class="g2">ㄷ</label>
+            <label class="g2">ㄱ</label>
+            <label class="g2">ㅅ</label>
+            <label class="g2">ㅛ</label>
+            <label class="g2">ㅕ</label>
+            <label class="g2">ㅑ</label>
+            <label class="g2">ㅐ</label>
+            <label class="g2">ㅔ</label>
+        </div>
+        <div>
+            <label class="g3">ㅁ</label>
+            <label class="g3">ㄴ</label>
+            <label class="g3">ㅇ</label>
+            <label class="g3">ㄹ</label>
+            <label class="g3">ㅎ</label>
+            <label class="g3">ㅗ</label>
+            <label class="g3">ㅓ</label>
+            <label class="g3">ㅏ</label>
+            <label class="g3">ㅣ</label>
+            <label class="g3">;</label>
+        </div>
+        <div>
+            <label class="g4">ㅋ</label>
+            <label class="g4">ㅌ</label>
+            <label class="g4">ㅊ</label>
+            <label class="g4">ㅍ</label>
+            <label class="g4">ㅠ</label>
+            <label class="g4">ㅜ</label>
+            <label class="g4">ㅡ</label>
+            <label class="g4">,</label>
+            <label class="g6">한/영</label>
+        </div>
+    </div>
+  </div>
+
+  <!-- 계산기 -->
+  <div id="calculator" class="content">
+    <h2>계산기</h2>
+    <input type="text" id="calculator-display" disabled><br><br>
+    <button class="special_operator">AC</button>
+    <button class="special_operator">+/-</button>
+    <button class="special_operator">%</button>
+    <button class="operator">/</button><br>
+    <button class="number">7</button>
+    <button class="number">8</button>
+    <button class="number">9</button>
+    <button class="operator">*</button><br>
+    <button class="number">4</button>
+    <button class="number">5</button>
+    <button class="number">6</button>
+    <button class="operator">-</button><br>
+    <button class="number">1</button>
+    <button class="number">2</button>
+    <button class="number">3</button>
+    <button class="operator">+</button><br>
+    <button class="special_operator">History</button>
+    <button class="number">0</button>
+    <button class="special_operator">.</button>
+    <button class="equal">=</button>
+  </div>
+
+  <!-- 전화기 -->
+  <div id="phone" class="content">
+    <h2>전화기</h2>
+    <input type="text" id="phone-display"><br><br>
+    <button class="number">1</button>
+    <button class="number">2</button>
+    <button class="number">3</button><br>
+    <button class="number">4</button>
+    <button class="number">5</button>
+    <button class="number">6</button><br>
+    <button class="number">7</button>
+    <button class="number">8</button>
+    <button class="number">9</button><br>
+    <button class="number">*</button>
+    <button class="number">0</button>
+    <button class="number">#</button>
+  </div>
+
+  <!-- footer -->
+  <div class="footer">
+    빅데이터과 (2402158, 김세희)
+  </div>
+
+  <!-- 탭 전환 -->
+  <script>
+    function showTab(tabId) {
+      document.querySelectorAll('.content').forEach(tab => tab.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+    }
+  </script>
+  
+  <!-- 영문타자기 기능-->
+  <script>
+	let letters = [];
+	let paper_1 = document.querySelector('.E_paper');
+	document.addEventListener('keydown', function(event) {
+      const currentTab = document.querySelector('.content.active')?.id;
+      if (currentTab == "english"){
+		letters += event.key;
+		paper_1.textContent = letters;
+      }});
+  </script>
+  
+  <!-- 한글타자기 기능 -->
+  <script>
+	const paper = document.querySelector('.paper');
+	const keyboardEn = document.getElementById('keyboard_en');
+	const keyboardKo = document.getElementById('keyboard_ko');
+    
+    let isKorean = true;   
+	let stack = [];       
+	let output = [];      
+            
+    const CHO =["ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
+    const JUNG = ["ㅏ","ㅐ","ㅑ","ㅒ","ㅓ","ㅔ","ㅕ","ㅖ","ㅗ","ㅘ","ㅙ","ㅚ","ㅛ","ㅜ","ㅝ","ㅞ","ㅟ","ㅠ","ㅡ","ㅢ","ㅣ"];
+    const engToKor = {q:'ㅂ', w:'ㅈ', e:'ㄷ', r:'ㄱ', t:'ㅅ', y:'ㅛ', u:'ㅕ', i:'ㅑ', o:'ㅐ', p:'ㅔ', a:'ㅁ', s:'ㄴ', d:'ㅇ', f:'ㄹ', g:'ㅎ', h:'ㅗ', j:'ㅓ', k:'ㅏ', l:'ㅣ', z:'ㅋ', x:'ㅌ', c:'ㅊ', v:'ㅍ', b:'ㅠ', n:'ㅜ', m:'ㅡ'};
+    
+    function findIndex(array, character) {
+		for(let i=0; i<array.length; i++) {
+			if(array[i] == character)
+			return i;
+		}
+		return -1;
+	}
+	function combine(cho, jung) {
+		const c = findIndex(CHO, cho); 
+		const j = findIndex(JUNG, jung);   
+        if(c == -1 || j == -1) 
+        return null;  
+        return String.fromCharCode(44032+(c*21*28)+(j*28));  
+        }
+        document.addEventListener('keydown', function(e) { 
+          const currentTab = document.querySelector(".content.active")?.id;
+    	  if (currentTab !== "korean") return;
+			const k = e.key.toLowerCase(); 
+            if (k == '.') {
+            	isKorean = !isKorean;
+
+                if (isKorean) {
+                    keyboardEn.classList.remove('show');
+                    keyboardEn.classList.add('hide');
+                    keyboardKo.classList.remove('hide');
+                    keyboardKo.classList.add('show');
+                } else {
+                    keyboardKo.classList.remove('show');
+                    keyboardKo.classList.add('hide');
+                    keyboardEn.classList.remove('hide');
+                    keyboardEn.classList.add('show');
+                }
+                return;
+            }
+            if(k.length !== 1) return; 
+            if(!isKorean) {  
+                output.push(k); 
+            } else { 
+                const kor = engToKor[k]; 
+                if(!kor) 
+                return;
+                stack.push(kor);  
+                if(stack.length == 2) { 
+                    const ch = combine(stack[0], stack[1]);  
+                    if(ch) {     
+                        output.push(ch);  
+                        stack = [];  
+                    } else {     
+                        output.push(stack[0]); 
+                        stack = [stack[1]];  
+                    }
+                }
+            }
+            paper.textContent = '';
+            for(let i=0; i<output.length; i++) {
+                paper.textContent += output[i];
+            }
+        });
+  </script>
+
+  <!-- 계산기 기능 -->
+  <script>
+    const calcDisplay = document.getElementById("calculator-display");
+    const calcButtons = document.querySelectorAll("#calculator button");
+    let currentInput = "";
+
+    function getPriority(op) {
+      if (op === '+' || op === '-') return 1;
+      if (op === '*' || op === '/') return 2;
+      return 0;
+    }
+
+    function toPostfix(input) {
+      const result = [], stack = [];
+      let num = "";
+      for (let i = 0; i < input.length; i++) {
+        const ch = input[i];
+        if ((ch >= '0' && ch <= '9') || ch === '.') {
+          num += ch;
+        } else if (ch === '-' && (i === 0 || "+-*/".includes(input[i - 1]))) {
+          num += ch;
+        } else if ("+-*/".includes(ch)) {
+          if (num) result.push(num), num = "";
+          while (stack.length && getPriority(stack[stack.length - 1]) >= getPriority(ch)) {
+            result.push(stack.pop());
+          }
+          stack.push(ch);
+        }
+      }
+      if (num) result.push(num);
+      while (stack.length) result.push(stack.pop());
+      return result;
+    }
+
+    function evalPostfix(postfix) {
+      const stack = [];
+      postfix.forEach(token => {
+        if ("+-*/".includes(token)) {
+          const b = stack.pop(), a = stack.pop();
+          if (token === '+') stack.push(a + b);
+          else if (token === '-') stack.push(a - b);
+          else if (token === '*') stack.push(a * b);
+          else if (token === '/') stack.push(a / b);
+        } else {
+          stack.push(Number(token));
+        }
+      });
+      return stack.pop();
+    }
+
+    calcButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const currentTab = document.querySelector(".content.active")?.id;
+    	if (currentTab !== "calculator") return;
+        
+        const value = btn.textContent;
+        if (value === "=") {
+          const postfix = toPostfix(currentInput);
+          const result = evalPostfix(postfix);
+          calcDisplay.value = result;
+          currentInput = result.toString();
+        } else if (value === "AC") {
+          currentInput = "";
+          calcDisplay.value = "";
+        } else if (value === "+/-") {
+          let i = currentInput.length - 1;
+          while (i >= 0 && ("0123456789.".includes(currentInput[i]))) i--;
+          if (currentInput[i] === '-') currentInput = currentInput.slice(0, i) + currentInput.slice(i + 1);
+          else currentInput = currentInput.slice(0, i + 1) + '-' + currentInput.slice(i + 1);
+          calcDisplay.value = currentInput;
+        } else if (value === "%") {
+          let i = currentInput.length - 1, num = "";
+          while (i >= 0 && ("0123456789.".includes(currentInput[i]))) {
+            num = currentInput[i] + num; i--;
+          }
+          currentInput = currentInput.slice(0, i + 1) + (parseFloat(num) / 100);
+          calcDisplay.value = currentInput;
+        } else if (value !== "History") {
+          currentInput += value;
+          calcDisplay.value = currentInput;
+        }
+      });
+	});
+  </script>
+
+  <!-- 전화기 기능 -->
+  <script>
+    let input = ""; 
+    const display = document.getElementById("phone-display"); 
+    const buttons = document.getElementsByClassName("number"); 
+    for (let i = 0; i < buttons.length; i++) {
+        buttons[i].onclick = function () {
+          const currentTab = document.querySelector(".content.active")?.id;
+      	  if (currentTab !== "phone") return;
+            const value = this.innerHTML;
+            if (value >= "0" && value <= "9") {
+                let count = 0;
+                for (let j = 0; j < input.length; j++) { 
+                    if (input[j] >= "0" && input[j] <= "9") { 
+                        count++; 
+                    }
+                }
+                if (count >= 11) return; 
+            }
+            input += value; 
+            display.value = formatPhoneNumber(input);
+        };
+    }
+
+    function formatPhoneNumber(str) {
+        let digits = "";
+        let specials = "";
+        for (let i = 0; i < str.length; i++) {
+            const ch = str[i];
+            if (ch >= "0" && ch <= "9") {
+                digits += ch;
+            } else {
+                specials += ch;
+            }
+        }
+        let result = "";
+        if (digits.length <= 3) {
+            result = digits;
+        } else if (digits.length <= 7) {
+            result = digits.slice(0, 3) + "-" + digits.slice(3);
+        } else {
+            result = digits.slice(0, 3) + "-" + digits.slice(3, 7) + "-" + digits.slice(7);
+        }
+        return result + specials;
+    }
+  </script>
+</body>
+</html>
